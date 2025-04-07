@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <stdint.h>
+#include <bitset>
 using namespace std;
 
 vector<string> split_into_chunks(string* input) {
@@ -10,12 +11,6 @@ vector<string> split_into_chunks(string* input) {
     for(int i = 0; i < input->size(); i += 3) {
         chunks.push_back(input->substr(i, min(3, (int)(input->size() - i))));
     }
-
-    // if(chunks.back().size() != 3) {
-    //     int n = 3 - chunks.back().size();
-
-    //     chunks.back().append(n, '=');
-    // }
 
     return chunks;
 }
@@ -78,6 +73,35 @@ void encode(vector<string>* chunks) {
     cout << "Base64: " << base64_result << endl;
 }
 
+void decode(string input) {
+    string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    int padding = 0;
+    while (!input.empty() && input.back() == '=') {
+        padding++;
+        input.pop_back();
+    }
+
+    string bitstream = "";
+
+    // Step 2 & 3: Convert each character to its 6-bit binary representation
+    for (char c : input) {
+        int index = base64_chars.find(c);
+        bitset<6> b(index);
+        bitstream += b.to_string();
+    }
+
+    // Step 4 & 5: Split bitstream into 8-bit chunks and convert to characters
+    string result = "";
+    for (size_t i = 0; i + 8 <= bitstream.size(); i += 8) {
+        string byte_str = bitstream.substr(i, 8);
+        bitset<8> byte(byte_str);
+        result += static_cast<char>(byte.to_ulong());
+    }
+
+    cout << "Decoded: " << result << endl;
+}
+
 int main() {
     string input;
     getline(cin, input);
@@ -92,6 +116,10 @@ int main() {
 
     cout << endl << endl;
     encode(&chunks);
+
+    string decode_input ;
+    cin >> decode_input;
+    decode(decode_input);
 
     return 0;
 }
