@@ -71,6 +71,14 @@ void encode(vector<string>* chunks) {
     }
 
     cout << "Base64: " << base64_result << endl;
+
+    string site_encode;
+    cout << "Insert site encode:\n";
+    getline(cin, site_encode);
+    if(base64_result == site_encode)
+        cout << true << endl;
+    else 
+        cout << false << endl;
 }
 
 void decode(string input) {
@@ -100,11 +108,32 @@ void decode(string input) {
     }
 
     cout << "Decoded: " << result << endl;
+
+    string site_decode;
+    cout << "Insert site decode:\n";
+    getline(cin, site_decode);
+
+    if(result == site_decode)
+        cout << true << endl;
+    else 
+    cout << false << endl;
 }
 
 int main() {
     string input;
-    getline(cin, input);
+    string line;
+
+    getline(cin, line);
+    input = line;
+
+    // Additional lines
+    while(true) {
+        getline(cin, line);
+        if(line.empty()) break;
+        
+        input += '\n' + line;
+    }
+    // getline(cin, input);
 
     vector<string> chunks = split_into_chunks(&input);
 
