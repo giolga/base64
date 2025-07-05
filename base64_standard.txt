@@ -70,25 +70,15 @@ void encode(vector<string>* chunks) {
         // cout << chunks->size() - 1 << " " << combined << " " << base64_result << endl;
     }
 
-    cout << "\033[1;33m"   // Bright Yellow
-     << "Base"
-     << "\033[1;36m"   // Bright Cyan
-     << "64"
-     << "\033[0m"      // Reset
-     << ": "
-     << "\033[1;34m"   // Bright blue./ (for result)
-     << base64_result
-     << "\033[0m"      // Reset
-     << endl;
+    cout << "Base64: " << base64_result << endl;
 
-
-    // string site_encode;
-    // cout << "Insert site encode:\n";
-    // getline(cin, site_encode);
-    // if(base64_result == site_encode)
-    //     cout << true << endl;
-    // else 
-    //     cout << false << endl;
+    string site_encode;
+    cout << "Insert site encode:\n";
+    getline(cin, site_encode);
+    if(base64_result == site_encode)
+        cout << true << endl;
+    else 
+        cout << false << endl;
 }
 
 void decode(string input) {
@@ -117,89 +107,48 @@ void decode(string input) {
         result += static_cast<char>(byte.to_ulong());
     }
 
-    cout << "\033[1;35m"  // Bright magenta for label
-     << "Decoded"
-     << "\033[0m"     // Reset color
-     << ": "
-     << "\033[1;34m"  // Bright blue for result
-     << result
-     << "\033[0m"     // Reset
-     << endl;
+    cout << "Decoded: " << result << endl;
 
+    string site_decode;
+    cout << "Insert site decode:\n";
+    getline(cin, site_decode);
 
-    // string site_decode;
-    // cout << "Insert site decode:\n";
-    // getline(cin, site_decode);
-
-    // if(result == site_decode)
-    //     cout << true << endl;
-    // else 
-    // cout << false << endl;
+    if(result == site_decode)
+        cout << true << endl;
+    else 
+    cout << false << endl;
 }
 
-void banner() {
-    cout << "\033[0;34m"  // bright blue
-         
-         << "\033[0m"
-         << "\033[1;33mBASE64\033[0m Encoder/Decoder Tool "
-         << "\033[1;31mintelkumi\033[0m v1.0\n\n";
-}
-
-void header() {
-    cout << "\033[1;32m"
-         << "================== BASE64 ENCODER/DECODER ==================\n"
-         << "          Powered by El Kumi Cipher Labs (v1.0)\n"
-         << "===========================================================\n"
-         << "\033[0m";
-}
-
-void help() {
-    cout << "\033[1;33mUsage:\033[0m\n"
-         << "  ./base64 -e <string_to_encode>    Encode input string\n"
-         << "  ./base64 -d <string_to_decode>    Decode input string\n\n";
-}
-
-int main(int argc, char* argv[]) {
-
-    if(argc < 2) {
-        help();
-
-        return 1;
-    }
-
-    banner();
-    header();
-
-    string option = argv[1];
+int main() {
     string input;
     string line;
 
-    if (option == "-e") {
-        if (argc < 3) {
-        std::cerr << "Error: Missing string to encode" << std::endl;
-        help();
-        return 1;
+    getline(cin, line);
+    input = line;
+
+    // Additional lines
+    while(true) {
+        getline(cin, line);
+        if(line.empty()) break;
+        
+        input += '\n' + line;
     }
-    std::string input = argv[2];
+    // getline(cin, input);
 
-    // If you want to support multi-word input, you could join argv[2..] here
+    vector<string> chunks = split_into_chunks(&input);
 
-    auto chunks = split_into_chunks(&input);
+    cout << chunks.size() << endl;
+    
+    for (const auto& it : chunks) {
+        cout << "'" << it << "' ";
+    }
+
+    cout << endl << endl;
     encode(&chunks);
 
-    } 
-    else if (option == "-d") {
-        if (argc < 3) {
-            std::cerr << "Error: Missing argument for -d" << std::endl;
-            help();
-            return 1;
-        }
-        std::string encoded_input = argv[2];
-        decode(encoded_input);
-    }
-    else {
-        help();
-        return 1;
-    }
+    string decode_input ;
+    cin >> decode_input;
+    decode(decode_input);
+
     return 0;
 }
